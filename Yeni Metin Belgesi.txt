@@ -1,0 +1,56 @@
+// Joystick Eksen Pinleri
+const int joyXPin = A0; // X ekseni (LED 1'i kontrol edecek)
+const int joyYPin = A1; // Y ekseni (LED 2'yi kontrol edecek)
+
+// LED Çıkış Pinleri (PWM Özellikli Olmalı)
+const int led1Pin = 9;  // LED 1 için
+const int led2Pin = 10; // LED 2 için
+
+void setup() {
+  // LED pinlerini ÇIKIŞ olarak ayarla
+  pinMode(led1Pin, OUTPUT);
+  pinMode(led2Pin, OUTPUT);
+  
+  // Seri iletişimi başlat (kontrol için)
+  Serial.begin(9600);
+  Serial.println("İki Eksenli LED Kontrolü Başladı!");
+}
+
+void loop() {
+  // --- X EKSENİ İŞLEMLERİ (LED 1) ---
+  
+  // 1. Joystick X ekseni analog değerini oku (0-1023)
+  int joyXValue = analogRead(joyXPin);
+  
+  // 2. Okunan 0-1023 değerini LED parlaklığı (PWM) için 0-255 aralığına dönüştür
+  int brightness1 = map(joyXValue, 0, 1023, 0, 255);
+  
+  // 3. LED 1'e PWM sinyali göndererek parlaklığı ayarla
+  analogWrite(led1Pin, brightness1);
+  
+  
+  // --- Y EKSENİ İŞLEMLERİ (LED 2) ---
+  
+  // 1. Joystick Y ekseni analog değerini oku (0-1023)
+  int joyYValue = analogRead(joyYPin);
+  
+  // 2. Okunan 0-1023 değerini LED parlaklığı (PWM) için 0-255 aralığına dönüştür
+  int brightness2 = map(joyYValue, 0, 1023, 0, 255);
+  
+  // 3. LED 2'ye PWM sinyali göndererek parlaklığı ayarla
+  analogWrite(led2Pin, brightness2);
+  
+  
+  // --- Seri Monitör Çıktısı (İsteğe Bağlı) ---
+  Serial.print("X (A0): ");
+  Serial.print(joyXValue);
+  Serial.print(" -> LED 1 Parlaklık: ");
+  Serial.print(brightness1);
+  
+  Serial.print(" | Y (A1): ");
+  Serial.print(joyYValue);
+  Serial.print(" -> LED 2 Parlaklık: ");
+  Serial.println(brightness2);
+
+  delay(10); // Kısa bir bekleme
+}
